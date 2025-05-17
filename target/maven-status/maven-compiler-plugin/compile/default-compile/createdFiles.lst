@@ -1,5 +1,4 @@
 com\mycompany\btl_cnpm\model\ImportedProduct.class
-com\mycompany\btl_cnpm\dao\ImportedProductDAO.class
 com\mycompany\btl_cnpm\dao\DAO.class
 com\mycompany\btl_cnpm\dao\ReceiptDAO.class
 com\mycompany\btl_cnpm\dao\UserDAO.class

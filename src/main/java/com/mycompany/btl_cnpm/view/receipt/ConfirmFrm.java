@@ -23,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.btl_cnpm.dao.ReceiptDAO;
-import com.mycompany.btl_cnpm.dao.ImportedProductDAO;
 import com.mycompany.btl_cnpm.model.ImportedProduct;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.model.User;
@@ -85,7 +84,7 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         gridPanel.add(new JLabel(dateFormat.format(receipt.getDate())));
         
         gridPanel.add(new JLabel("Supplier:"));
-        gridPanel.add(new JLabel(receipt.getSupplier().getName() + " (Tel: " + receipt.getSupplier().getTel() + ")"));
+        gridPanel.add(new JLabel(receipt.getSupplier().getName() + " (Address: " + receipt.getSupplier().getAddress() + ", Tel: " + receipt.getSupplier().getTel() + ")"));
         
         gridPanel.add(new JLabel("Total Items:"));
         gridPanel.add(new JLabel(String.valueOf(receipt.getTotalProductQuantity())));
@@ -99,7 +98,7 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         tablePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Imported Products"));
         
         // Table
-        String[] columns = {"ID", "Product", "Description", "Quantity", "Unit Price", "Subtotal"};
+        String[] columns = {"STT", "Product", "Description", "Quantity", "Unit Price", "Subtotal"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -113,9 +112,10 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         tblProducts.setRowHeight(25);
     
         ArrayList<ImportedProduct> products = receipt.getImportedProducts();
+        int stt = 1;
         for (ImportedProduct ip : products) {
             Object[] row = {
-                ip.getProduct().getId(),
+                stt++,
                 ip.getProduct().getName(),
                 ip.getProduct().getDescription(),
                 ip.getQuantity(),
@@ -183,11 +183,11 @@ public class ConfirmFrm extends JFrame implements ActionListener {
             ReceiptDAO receiptDAO = new ReceiptDAO();
             
             if (receiptDAO.addProductOrder(receipt)) {
-                ImportedProductDAO importedProductDAO = new ImportedProductDAO();
-                ArrayList<ImportedProduct> importedProducts = receipt.getImportedProducts();
-                for (ImportedProduct ip : importedProducts) {
-                    importedProductDAO.addImportedProduct(ip, receipt.getId());
-                }
+                // ImportedProductDAO importedProductDAO = new ImportedProductDAO();
+                // ArrayList<ImportedProduct> importedProducts = receipt.getImportedProducts();
+                // for (ImportedProduct ip : importedProducts) {
+                //     importedProductDAO.addImportedProduct(ip, receipt.getId());
+                // }
                 JOptionPane.showMessageDialog(this, "Receipt confirmed successfully!");
                 backToSupplierFrm(receipt.getUser());
             } else {

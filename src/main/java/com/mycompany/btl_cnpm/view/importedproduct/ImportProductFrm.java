@@ -185,31 +185,10 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                 receipt.getImportedProducts().remove(sz-1);
                 receipt.addImportedProduct(importedProduct);
                 
-                int choice = JOptionPane.showConfirmDialog(this, 
-                        "Product added to receipt. Do you want to add more products?", 
-                        "Add More Products", 
-                        JOptionPane.YES_NO_OPTION);
-                
-                if (choice == JOptionPane.YES_OPTION) {
-                    // Go back to productFrm
-                    ProductFrm productFrm = new ProductFrm(receipt);
-                    productFrm.setVisible(true);
-                    this.dispose();
-                } else {
-                    // Prepare and go to confirmFrm
-                    if (receipt.getImportedProducts().isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "Receipt must have at least one product!");
-                        return;
-                    }
-                    
-                    // Update receipt date
-                    receipt.setDate(new Date());
-                    
-                    // Navigate to confirmFrm
-                    ConfirmFrm confirmFrm = new ConfirmFrm(receipt);
-                    confirmFrm.setVisible(true);
-                    this.dispose();
-                }
+                // Go back to productFrm
+                ProductFrm productFrm = new ProductFrm(receipt);
+                productFrm.setVisible(true);
+                this.dispose();
                 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please enter valid price and quantity values!");

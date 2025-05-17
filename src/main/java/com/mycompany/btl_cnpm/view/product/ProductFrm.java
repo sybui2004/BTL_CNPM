@@ -28,6 +28,7 @@ import com.mycompany.btl_cnpm.model.Product;
 import com.mycompany.btl_cnpm.model.ImportedProduct;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.view.importedproduct.ImportProductFrm;
+import com.mycompany.btl_cnpm.view.receipt.ConfirmFrm;
 
 public class ProductFrm extends JFrame implements ActionListener {
     private JTextField txtName;
@@ -95,7 +96,7 @@ public class ProductFrm extends JFrame implements ActionListener {
         // Input fields panel
         JPanel pnInputRow1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnInputRow1.setBackground(new Color(240, 240, 240));
-        JLabel lblName = new JLabel("Product name:", SwingConstants.RIGHT);
+        JLabel lblName = new JLabel("Name:", SwingConstants.RIGHT);
         lblName.setPreferredSize(new Dimension(100, 25));
         pnInputRow1.add(lblName);
         
@@ -149,7 +150,7 @@ public class ProductFrm extends JFrame implements ActionListener {
             }
         };
         
-        tableModel.addColumn("Id");
+        tableModel.addColumn("STT");
         tableModel.addColumn("Name");
         tableModel.addColumn("Description");
         tableModel.addColumn("Quantity");
@@ -178,6 +179,16 @@ public class ProductFrm extends JFrame implements ActionListener {
         JPanel pnSouth = new JPanel(new BorderLayout());
         pnSouth.setBackground(new Color(240, 240, 240));
         pnSouth.add(pnTable, BorderLayout.CENTER);
+        
+        // Add Next button panel
+        JPanel nextButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        nextButtonPanel.setBackground(new Color(240, 240, 240));
+        JButton btnNext = new JButton("Next");
+        btnNext.setPreferredSize(new Dimension(100, 30));
+        btnNext.addActionListener(this);
+        nextButtonPanel.add(btnNext);
+        pnSouth.add(nextButtonPanel, BorderLayout.SOUTH);
+        
         pnMain.add(pnSouth, BorderLayout.SOUTH);
         
         this.setContentPane(pnMain);
@@ -204,18 +215,19 @@ public class ProductFrm extends JFrame implements ActionListener {
         }
         
         DefaultTableModel model = (DefaultTableModel) tblProduct.getModel();
-        int id = (int) model.getValueAt(selectedRow, 0);
         String name = (String) model.getValueAt(selectedRow, 1);
         String description = (String) model.getValueAt(selectedRow, 2);
         int quantity = (int) model.getValueAt(selectedRow, 3);
         
-        Product product = new Product();
-        product.setId(id);
-        product.setName(name);
-        product.setDescription(description);
-        product.setQuantity(quantity);
+        ProductDAO productDAO = new ProductDAO();
+        ArrayList<Product> products = productDAO.searchProductByName(name);
+        for (Product p : products) {
+            if (p.getName().equals(name) && p.getDescription().equals(description) && p.getQuantity() == quantity) {
+                return p;
+            }
+        }
         
-        return product;
+        return null;
     }
     
     @Override
@@ -236,9 +248,10 @@ public class ProductFrm extends JFrame implements ActionListener {
                 return;
             }
             
+            int stt = 1;
             for (Product product : products) {
                 model.addRow(new Object[] {
-                    product.getId(),
+                    stt++,
                     product.getName(),
                     product.getDescription(),
                     product.getQuantity()
@@ -268,6 +281,18 @@ public class ProductFrm extends JFrame implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to add product");
             }
+        } else if (e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Next")) {
+            if (receipt.getImportedProducts().isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Please select at least one product", 
+                    "Warning", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            ConfirmFrm confirmFrm = new ConfirmFrm(receipt);
+            confirmFrm.setVisible(true);
+            this.dispose();
         }
     }
 } 

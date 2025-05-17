@@ -86,7 +86,7 @@ public class SupplierFrm extends JFrame implements ActionListener {
         
         JPanel pnLblName = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnLblName.setBackground(new Color(240, 240, 240));
-        JLabel lblSupplierName = new JLabel("Supplier name:");
+        JLabel lblSupplierName = new JLabel("Name:");
         pnLblName.add(lblSupplierName);
         
         JPanel pnLblAddress = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -148,7 +148,7 @@ public class SupplierFrm extends JFrame implements ActionListener {
             }
         };
         
-        tableModel.addColumn("Id");
+        tableModel.addColumn("STT");
         tableModel.addColumn("Name");
         tableModel.addColumn("Address");
         tableModel.addColumn("Tell");
@@ -164,7 +164,7 @@ public class SupplierFrm extends JFrame implements ActionListener {
         header.setFont(new Font("Arial", Font.BOLD, 12));
 
         TableColumnModel columnModel = tblSupplier.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(50);    // Id
+        columnModel.getColumn(0).setPreferredWidth(50);    // STT
         columnModel.getColumn(1).setPreferredWidth(150);   // Name
         columnModel.getColumn(2).setPreferredWidth(200);   // Address
         columnModel.getColumn(3).setPreferredWidth(100);   // Tell
@@ -210,18 +210,19 @@ public class SupplierFrm extends JFrame implements ActionListener {
         }
         
         DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
-        int id = (int) model.getValueAt(selectedRow, 0);
         String name = (String) model.getValueAt(selectedRow, 1);
         String address = (String) model.getValueAt(selectedRow, 2);
         String tel = (String) model.getValueAt(selectedRow, 3);
         
-        Supplier supplier = new Supplier();
-        supplier.setId(id);
-        supplier.setName(name);
-        supplier.setAddress(address);
-        supplier.setTel(tel);
+        SupplierDAO supplierDAO = new SupplierDAO();
+        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(name);
+        for (Supplier s : suppliers) {
+            if (s.getName().equals(name) && s.getAddress().equals(address) && s.getTel().equals(tel)) {
+                return s;
+            }
+        }
         
-        return supplier;
+        return null;
     }
     
     @Override
@@ -243,9 +244,10 @@ public class SupplierFrm extends JFrame implements ActionListener {
                 return;
             }
             
+            int stt = 1;
             for (Supplier supplier : suppliers) {
                 model.addRow(new Object[]{
-                    supplier.getId(),
+                    stt++,
                     supplier.getName(),
                     supplier.getAddress(),
                     supplier.getTel()
@@ -279,9 +281,10 @@ public class SupplierFrm extends JFrame implements ActionListener {
                 DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
                 model.setRowCount(0);
                 
+                int stt = 1;
                 for (Supplier s : supplierDAO.searchSupplierByName("")) {
                     model.addRow(new Object[]{
-                        s.getId(),
+                        stt++,
                         s.getName(),
                         s.getAddress(),
                         s.getTel()
