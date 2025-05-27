@@ -36,6 +36,7 @@ public class ProductFrm extends JFrame implements ActionListener {
     private JButton btnSearch;
     private JButton btnAddNew;
     private JTable tblProduct;
+    private DefaultTableModel tableModel;
     private Receipt receipt;
     
     public ProductFrm(Receipt receipt) {
@@ -142,18 +143,16 @@ public class ProductFrm extends JFrame implements ActionListener {
         pnTable.setBackground(new Color(240, 240, 240));
         pnTable.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         
-        // Create table model with non-editable cells
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make all cells non-editable
+                return false;
             }
         };
         
         tableModel.addColumn("STT");
         tableModel.addColumn("Name");
         tableModel.addColumn("Description");
-        tableModel.addColumn("Quantity");
         
         tblProduct = new JTable(tableModel);
         tblProduct.setRowHeight(25);
@@ -216,13 +215,11 @@ public class ProductFrm extends JFrame implements ActionListener {
         
         DefaultTableModel model = (DefaultTableModel) tblProduct.getModel();
         String name = (String) model.getValueAt(selectedRow, 1);
-        String description = (String) model.getValueAt(selectedRow, 2);
-        int quantity = (int) model.getValueAt(selectedRow, 3);
-        
+        String description = (String) model.getValueAt(selectedRow, 2);        
         ProductDAO productDAO = new ProductDAO();
         ArrayList<Product> products = productDAO.searchProductByName(name);
         for (Product p : products) {
-            if (p.getName().equals(name) && p.getDescription().equals(description) && p.getQuantity() == quantity) {
+            if (p.getName().equals(name) && p.getDescription().equals(description)) {
                 return p;
             }
         }
@@ -254,7 +251,6 @@ public class ProductFrm extends JFrame implements ActionListener {
                     stt++,
                     product.getName(),
                     product.getDescription(),
-                    product.getQuantity()
                 });
             }
         } else if (e.getSource() == btnAddNew) {
@@ -268,7 +264,6 @@ public class ProductFrm extends JFrame implements ActionListener {
             Product product = new Product();
             product.setName(txtName.getText());
             product.setDescription(txtDescription.getText());
-            product.setQuantity(0); 
             
             ProductDAO productDAO = new ProductDAO();
             if (productDAO.addProduct(product)) {

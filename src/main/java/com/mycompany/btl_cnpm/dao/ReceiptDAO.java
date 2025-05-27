@@ -25,7 +25,6 @@ public class ReceiptDAO extends DAO {
     public boolean addProductOrder(Receipt receipt) {
         String sqlAddProductOrder = "INSERT INTO tblReceipt(idUser, idSupplier, date, note ) VALUES(?,?,?,?)";
         String sqlAddImportedProduct = "INSERT INTO tblImportedProduct(idReceipt, idProduct, quantity, unitPrice) VALUES(?,?,?,?)";
-        String sqlUpdateProductQuantity = "UPDATE tblProduct SET quantity = quantity + ? WHERE id=?";
         try {
             PreparedStatement ps = conn.prepareStatement(sqlAddProductOrder, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, receipt.getUser().getId());
@@ -45,11 +44,6 @@ public class ReceiptDAO extends DAO {
                     ps.setInt(2, importedProduct.getProduct().getId());
                     ps.setInt(3, importedProduct.getQuantity());
                     ps.setInt(4, importedProduct.getUnitPrice());
-                    ps.executeUpdate();
-
-                    ps = conn.prepareStatement(sqlUpdateProductQuantity);
-                    ps.setInt(1, importedProduct.getQuantity());
-                    ps.setInt(2, importedProduct.getProduct().getId());
                     ps.executeUpdate();
                 }
                 return true;

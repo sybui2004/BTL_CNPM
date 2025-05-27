@@ -69,7 +69,7 @@ public class LoginFrm extends JFrame implements ActionListener{
                 &&(((JButton)e.getSource()).equals(btnLogin))) {
             User user = new User();
             user.setUsername(txtUsername.getText());
-            user.setPassword(txtPassword.getText());
+            user.setPassword(new String(txtPassword.getPassword()));
              
             UserDAO ud = new UserDAO();
             if(ud.checkLogin(user)) {

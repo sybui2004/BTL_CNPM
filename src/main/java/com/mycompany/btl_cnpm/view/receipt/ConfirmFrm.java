@@ -97,7 +97,6 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         tablePanel.setBackground(new Color(240, 240, 240));
         tablePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Imported Products"));
         
-        // Table
         String[] columns = {"STT", "Product", "Description", "Quantity", "Unit Price", "Subtotal"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -183,11 +182,6 @@ public class ConfirmFrm extends JFrame implements ActionListener {
             ReceiptDAO receiptDAO = new ReceiptDAO();
             
             if (receiptDAO.addProductOrder(receipt)) {
-                // ImportedProductDAO importedProductDAO = new ImportedProductDAO();
-                // ArrayList<ImportedProduct> importedProducts = receipt.getImportedProducts();
-                // for (ImportedProduct ip : importedProducts) {
-                //     importedProductDAO.addImportedProduct(ip, receipt.getId());
-                // }
                 JOptionPane.showMessageDialog(this, "Receipt confirmed successfully!");
                 backToSupplierFrm(receipt.getUser());
             } else {

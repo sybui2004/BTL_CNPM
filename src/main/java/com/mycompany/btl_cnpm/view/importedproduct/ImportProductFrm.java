@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,7 +20,6 @@ import javax.swing.JTextField;
 import com.mycompany.btl_cnpm.model.ImportedProduct;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.view.product.ProductFrm;
-import com.mycompany.btl_cnpm.view.receipt.ConfirmFrm;
 
 public class ImportProductFrm extends JFrame implements ActionListener {
     private JPanel mainPanel, headerPanel, formPanel, buttonPanel;
@@ -174,18 +172,14 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                     return;
                 }
                 
-                // Create new imported product
                 ImportedProduct importedProduct = new ImportedProduct();
                 int sz = receipt.getImportedProducts().size();
                 importedProduct.setProduct(receipt.getImportedProducts().get(sz-1).getProduct());
                 importedProduct.setQuantity(quantity);
                 importedProduct.setUnitPrice(price);
                 
-                // Add to receipt
-                receipt.getImportedProducts().remove(sz-1);
                 receipt.addImportedProduct(importedProduct);
                 
-                // Go back to productFrm
                 ProductFrm productFrm = new ProductFrm(receipt);
                 productFrm.setVisible(true);
                 this.dispose();
@@ -194,7 +188,6 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Please enter valid price and quantity values!");
             }
         } else if (e.getSource() == btnCancel) {
-            // Return to productFrm
             ProductFrm productFrm = new ProductFrm(receipt);
             productFrm.setVisible(true);
             this.dispose();

@@ -91,9 +91,4 @@ public class ImportHomeFrm extends JFrame implements ActionListener {
             this.dispose();
         }
     }
-    public static void main(String[] args) {
-        // Launch the login form
-        LoginFrm loginFrm = new LoginFrm();
-        loginFrm.setVisible(true);
-    }
 }

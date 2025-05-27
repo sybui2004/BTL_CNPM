@@ -31,7 +31,6 @@ public class ProductDAO extends DAO {
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
                 product.setDescription(rs.getString("description"));
-                product.setQuantity(rs.getInt("quantity"));
                 products.add(product);
             }
             ps.close();
@@ -43,12 +42,11 @@ public class ProductDAO extends DAO {
     }
     
     public boolean addProduct(Product product) {
-        String sql = "INSERT INTO tblProduct(name, description, quantity) VALUES(?,?,?)";
+        String sql = "INSERT INTO tblProduct(name, description) VALUES(?,?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, product.getName());
             ps.setString(2, product.getDescription());
-            ps.setInt(3, product.getQuantity());
             ps.executeUpdate();
             
             ResultSet generatedKeys = ps.getGeneratedKeys();

@@ -14,17 +14,15 @@ public class Product implements Serializable {
     private int id;
     private String name;
     private String description;
-    private int quantity;
 
     public Product() {
         super();
     }
 
-    public Product(String name, String description, int quantity) {
+    public Product(String name, String description) {
         super();
         this.name = name;
         this.description = description;
-        this.quantity = quantity;
     }
 
     public int getId() {
@@ -49,13 +47,5 @@ public class Product implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }

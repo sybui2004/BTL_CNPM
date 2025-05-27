@@ -15,8 +15,6 @@ import java.util.Date;
 public class Receipt implements Serializable {
     private int id;
     private Date date;
-    private int totalPrice;
-    private int totalProductQuantity;
     private String note;
     private Supplier supplier;
     private User user;
@@ -24,28 +22,18 @@ public class Receipt implements Serializable {
     
     public Receipt() {
         super();
-        this.date = new Date();
-        this.importedProducts = new ArrayList<>();
+        this.importedProducts = new ArrayList<ImportedProduct>();
     }
-    
-    public Receipt(Supplier supplier, User user, String note) {
+
+    public Receipt(Date date, String note, Supplier supplier, User user) {
         super();
-        this.date = new Date();
+        this.date = date;
+        this.note = note;
         this.supplier = supplier;
         this.user = user;
-        this.note = note;
-        this.importedProducts = new ArrayList<>();
-        this.totalPrice = 0;
-        this.totalProductQuantity = 0;
+        this.importedProducts = new ArrayList<ImportedProduct>();
     }
-    
-    public void addImportedProduct(ImportedProduct importedProduct) {
-        this.importedProducts.add(importedProduct);
-        this.totalPrice += importedProduct.getSubTotal();
-        this.totalProductQuantity += importedProduct.getQuantity();
-    }
-    
-
+   
     public int getId() {
         return id;
     }
@@ -60,22 +48,6 @@ public class Receipt implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public int getTotalProductQuantity() {
-        return totalProductQuantity;
-    }
-
-    public void setTotalProductQuantity(int totalProductQuantity) {
-        this.totalProductQuantity = totalProductQuantity;
     }
 
     public String getNote() {
@@ -102,7 +74,27 @@ public class Receipt implements Serializable {
         this.user = user;
     }
 
+    public void addImportedProduct(ImportedProduct importedProduct) {
+        this.importedProducts.add(importedProduct);
+    }
+
     public ArrayList<ImportedProduct> getImportedProducts() {
         return importedProducts;
+    }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (ImportedProduct i : importedProducts) {
+            totalPrice += i.getSubTotal();
+        }
+        return totalPrice;
+    }
+    
+    public int getTotalProductQuantity() {
+        int totalProductQuantity = 0;
+        for (ImportedProduct i : importedProducts) {
+            totalProductQuantity += i.getQuantity();
+        }
+        return totalProductQuantity;
     }
 }

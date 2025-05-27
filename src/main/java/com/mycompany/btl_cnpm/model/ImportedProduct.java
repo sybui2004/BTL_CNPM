@@ -13,7 +13,6 @@ import java.io.Serializable;
 public class ImportedProduct implements Serializable {
     private int id;
     private int quantity;
-    private int subTotal;
     private int unitPrice;
     private Product product;
     
@@ -26,7 +25,6 @@ public class ImportedProduct implements Serializable {
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.product = product;
-        this.subTotal = quantity * unitPrice;
     }
 
     public int getId() {
@@ -43,15 +41,6 @@ public class ImportedProduct implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-        this.subTotal = quantity * unitPrice;
-    }
-
-    public int getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(int subTotal) {
-        this.subTotal = subTotal;
     }
 
     public int getUnitPrice() {
@@ -60,7 +49,6 @@ public class ImportedProduct implements Serializable {
 
     public void setUnitPrice(int unitPrice) {
         this.unitPrice = unitPrice;
-        this.subTotal = quantity * unitPrice;
     }
 
     public Product getProduct() {
@@ -69,5 +57,9 @@ public class ImportedProduct implements Serializable {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public int getSubTotal() {
+        return quantity * unitPrice;
     }
 }

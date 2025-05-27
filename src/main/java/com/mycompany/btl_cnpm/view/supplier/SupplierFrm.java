@@ -25,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.mycompany.btl_cnpm.dao.SupplierDAO;
 import com.mycompany.btl_cnpm.model.Supplier;
 import com.mycompany.btl_cnpm.model.User;
@@ -38,10 +40,10 @@ public class SupplierFrm extends JFrame implements ActionListener {
     private JButton btnSearch;
     private JButton btnAddNew;
     private JTable tblSupplier;
+    private DefaultTableModel tableModel;
     private User user;
     
     public SupplierFrm(User user) {
-
         this.user = user;
         initComponents();
     }
@@ -141,7 +143,7 @@ public class SupplierFrm extends JFrame implements ActionListener {
         tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         tablePanel.setBackground(new Color(240, 240, 240));
 
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -172,15 +174,7 @@ public class SupplierFrm extends JFrame implements ActionListener {
         tblSupplier.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Double-click
-                    Supplier selectedSupplier = getSelectedSupplier();
-                    Receipt receipt = new Receipt(selectedSupplier, user, "");
-                    if (selectedSupplier != null) {
-                        ProductFrm productFrm = new ProductFrm(receipt);
-                        productFrm.setVisible(true);
-                        dispose();
-                    }
-                }
+                navigateToProduct();
             }
         });
         
@@ -202,6 +196,22 @@ public class SupplierFrm extends JFrame implements ActionListener {
         this.setTitle("Search Supplier");
     }
     
+    private void navigateToProduct() {
+        Supplier selectedSupplier = getSelectedSupplier();
+        Receipt receipt = new Receipt();
+
+        receipt.setDate(new Date());
+        receipt.setNote("");
+        receipt.setSupplier(selectedSupplier);
+        receipt.setUser(user);
+
+        if (selectedSupplier != null) {
+            ProductFrm productFrm = new ProductFrm(receipt);
+            productFrm.setVisible(true);
+            dispose();
+        }
+    }
+
     private Supplier getSelectedSupplier() {
         int selectedRow = tblSupplier.getSelectedRow();
         if (selectedRow == -1) {
@@ -228,7 +238,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
-            // Implement search functionality
             String name = txtName.getText();
             SupplierDAO supplierDAO = new SupplierDAO();
             DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
@@ -236,7 +245,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
             
             ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(name);
             if (suppliers.isEmpty()) {
-                // Show alert when no suppliers found
                 JOptionPane.showMessageDialog(this, 
                     "No suppliers found matching \"" + name + "\"", 
                     "Search Results", 
@@ -254,7 +262,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
                 });
             }
         } else if (e.getSource() == btnAddNew) {
-            // Implement add new functionality
             if (txtName.getText().trim().isEmpty() || 
                 txtAddress.getText().trim().isEmpty() || 
                 txtTel.getText().trim().isEmpty()) {
@@ -272,7 +279,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
             if (supplierDAO.addSupplier(supplier)) {
                 JOptionPane.showMessageDialog(this, "Supplier added successfully");
                 
-                // Clear fields
                 txtName.setText("");
                 txtAddress.setText("");
                 txtTel.setText("");

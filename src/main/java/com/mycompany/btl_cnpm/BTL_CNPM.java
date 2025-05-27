@@ -13,7 +13,6 @@ import com.mycompany.btl_cnpm.view.user.LoginFrm;
 public class BTL_CNPM {
 
     public static void main(String[] args) {
-        // Launch the login form
         LoginFrm loginFrm = new LoginFrm();
         loginFrm.setVisible(true);
     }
