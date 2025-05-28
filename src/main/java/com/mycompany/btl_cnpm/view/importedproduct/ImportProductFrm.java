@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import com.mycompany.btl_cnpm.model.ImportedProduct;
+import com.mycompany.btl_cnpm.model.Product;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.view.product.ProductFrm;
 
@@ -30,9 +31,12 @@ public class ImportProductFrm extends JFrame implements ActionListener {
     private JTextField txtPrice, txtQuantity;
     private JButton btnAddToReceipt, btnCancel;
     private Receipt receipt;
+    private ImportedProduct currentImportedProduct;
     
     public ImportProductFrm(Receipt receipt) {
         this.receipt = receipt;
+        int lastIndex = receipt.getImportedProducts().size() - 1;
+        this.currentImportedProduct = receipt.getImportedProducts().get(lastIndex);
         initComponents();
     }
     
@@ -74,8 +78,9 @@ public class ImportProductFrm extends JFrame implements ActionListener {
         lblProductID = new JLabel("Product ID:");
         lblProductID.setFont(new Font("Arial", Font.BOLD, 14));
         productInfoPanel.add(lblProductID);
-        int sz = receipt.getImportedProducts().size();
-        txtProductID = new JLabel(String.valueOf(receipt.getImportedProducts().get(sz-1).getProduct().getId()));
+        
+        Product product = currentImportedProduct.getProduct();
+        txtProductID = new JLabel(String.valueOf(product.getId()));
         txtProductID.setFont(new Font("Arial", Font.PLAIN, 14));
         productInfoPanel.add(txtProductID);
         
@@ -83,7 +88,7 @@ public class ImportProductFrm extends JFrame implements ActionListener {
         lblProductName.setFont(new Font("Arial", Font.BOLD, 14));
         productInfoPanel.add(lblProductName);
         
-        txtProductName = new JLabel(receipt.getImportedProducts().get(sz-1).getProduct().getName());
+        txtProductName = new JLabel(product.getName());
         txtProductName.setFont(new Font("Arial", Font.PLAIN, 14));
         productInfoPanel.add(txtProductName);
         
@@ -91,7 +96,7 @@ public class ImportProductFrm extends JFrame implements ActionListener {
         lblProductDesc.setFont(new Font("Arial", Font.BOLD, 14));
         productInfoPanel.add(lblProductDesc);
         
-        txtProductDesc = new JLabel(receipt.getImportedProducts().get(sz-1).getProduct().getDescription());
+        txtProductDesc = new JLabel(product.getDescription());
         txtProductDesc.setFont(new Font("Arial", Font.PLAIN, 14));
         productInfoPanel.add(txtProductDesc);
         
@@ -172,13 +177,8 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                     return;
                 }
                 
-                ImportedProduct importedProduct = new ImportedProduct();
-                int sz = receipt.getImportedProducts().size();
-                importedProduct.setProduct(receipt.getImportedProducts().get(sz-1).getProduct());
-                importedProduct.setQuantity(quantity);
-                importedProduct.setUnitPrice(price);
-                
-                receipt.addImportedProduct(importedProduct);
+                currentImportedProduct.setQuantity(quantity);
+                currentImportedProduct.setUnitPrice(price);
                 
                 ProductFrm productFrm = new ProductFrm(receipt);
                 productFrm.setVisible(true);
@@ -188,6 +188,8 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Please enter valid price and quantity values!");
             }
         } else if (e.getSource() == btnCancel) {
+            receipt.getImportedProducts().remove(currentImportedProduct);
+            
             ProductFrm productFrm = new ProductFrm(receipt);
             productFrm.setVisible(true);
             this.dispose();

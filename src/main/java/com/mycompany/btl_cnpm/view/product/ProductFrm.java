@@ -197,9 +197,11 @@ public class ProductFrm extends JFrame implements ActionListener {
         this.setTitle("Search Product");
     }
     private void navigateToImportProduct() {
-        ImportedProduct importedProduct = new ImportedProduct(0, 0, getSelectedProduct());
-        if (importedProduct != null) {
+        Product selectedProduct = getSelectedProduct();
+        if (selectedProduct != null) {
+            ImportedProduct importedProduct = new ImportedProduct(0, 0, selectedProduct);
             receipt.addImportedProduct(importedProduct);
+            
             ImportProductFrm importFrm = new ImportProductFrm(receipt);
             importFrm.setVisible(true);
             this.dispose();
