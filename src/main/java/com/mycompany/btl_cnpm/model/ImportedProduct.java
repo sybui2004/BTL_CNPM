@@ -10,6 +10,7 @@ import java.io.Serializable;
  *
  * @author MSI-PC
  */
+
 public class ImportedProduct implements Serializable {
     private int id;
     private int quantity;

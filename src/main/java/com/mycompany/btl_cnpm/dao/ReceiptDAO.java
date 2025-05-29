@@ -23,6 +23,9 @@ public class ReceiptDAO extends DAO {
     }
 
     public boolean addProductOrder(Receipt receipt) {
+        if (receipt.getImportedProducts() == null || receipt.getImportedProducts().isEmpty()) {
+            return false;
+        }
         String sqlAddProductOrder = "INSERT INTO tblReceipt(idUser, idSupplier, date, note ) VALUES(?,?,?,?)";
         String sqlAddImportedProduct = "INSERT INTO tblImportedProduct(idReceipt, idProduct, quantity, unitPrice) VALUES(?,?,?,?)";
         try {

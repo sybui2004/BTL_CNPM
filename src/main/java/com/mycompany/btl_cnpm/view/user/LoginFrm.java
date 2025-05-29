@@ -65,8 +65,7 @@ public class LoginFrm extends JFrame implements ActionListener{
         this.setTitle("Login");
     }
     public void actionPerformed(ActionEvent e) {
-        if((e.getSource() instanceof JButton)
-                &&(((JButton)e.getSource()).equals(btnLogin))) {
+        if(e.getSource() == btnLogin) {
             User user = new User();
             user.setUsername(txtUsername.getText());
             user.setPassword(new String(txtPassword.getPassword()));
@@ -78,8 +77,7 @@ public class LoginFrm extends JFrame implements ActionListener{
                     this.dispose();
                 }else
                     JOptionPane.showMessageDialog(this, 
-                                 "The function of the role " + user.getRole() 
-                                 + " is under construction!");
+                                 "Don't have permission to access this role!");
             }else {
                 JOptionPane.showMessageDialog(this, 
                           "Incorrect username and/or password!");

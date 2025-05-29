@@ -160,7 +160,7 @@ public class ImportProductFrm extends JFrame implements ActionListener {
         if (e.getSource() == btnAddToReceipt) {
             try {
                 if (txtPrice.getText().trim().isEmpty() || txtQuantity.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please fill in all fields!");
+                    JOptionPane.showMessageDialog(this, "Please fill in all fields");
                     return;
                 }
                 
@@ -168,12 +168,12 @@ public class ImportProductFrm extends JFrame implements ActionListener {
                 int quantity = Integer.parseInt(txtQuantity.getText().trim());
                 
                 if (price <= 0) {
-                    JOptionPane.showMessageDialog(this, "Price must be greater than 0!");
+                    JOptionPane.showMessageDialog(this, "Price must be greater than 0");
                     return;
                 }
                 
                 if (quantity <= 0) {
-                    JOptionPane.showMessageDialog(this, "Quantity must be greater than 0!");
+                    JOptionPane.showMessageDialog(this, "Quantity must be greater than 0");
                     return;
                 }
                 

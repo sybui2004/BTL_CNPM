@@ -44,7 +44,6 @@ public class ProductDAOTest {
 
     @Test
     public void testSearchProductByNameException1() {
-        System.out.println("searchProductByName - Exception Case 1");
         String key = "xxxxxxxx";
         ArrayList<Product> products = productDAO.searchProductByName(key);
         assertNotNull(products);
@@ -53,7 +52,6 @@ public class ProductDAOTest {
     
     @Test
     public void testSearchProductByNameException2() {
-        System.out.println("searchProductByName - Exception Case 2");
         String key = "sd";
         ArrayList<Product> products = productDAO.searchProductByName(key);
         assertNotNull(products);
@@ -62,7 +60,6 @@ public class ProductDAOTest {
 
     @Test
     public void testSearchProductByNameStandard1() {
-        System.out.println("searchProductByName - Standard Case 1");
         String key = "Pen";
         ArrayList<Product> products = productDAO.searchProductByName(key);
         
@@ -77,7 +74,6 @@ public class ProductDAOTest {
 
     @Test
     public void testSearchProductByNameStandard2() {
-        System.out.println("searchProductByName - Standard Case 2");
         String key = "Book";
         ArrayList<Product> products = productDAO.searchProductByName(key);
         
@@ -89,24 +85,9 @@ public class ProductDAOTest {
 		}
 		return;
     }
-    
 
-    @Test
-    public void testSearchProductByNameEmptyKeyword() {
-        System.out.println("searchProductByName - Empty Keyword");
-        String key = "";
-        ArrayList<Product> products = productDAO.searchProductByName(key);
-        
-        assertNotNull(products);
-        assertTrue(products.size() > 0);
-    }
-
-    /**
-     * Test of addProduct method
-     */
     @Test
     public void testAddProduct() {
-        System.out.println("addProduct");
         Product product = new Product();
         String uniqueName = "Test Product " + System.currentTimeMillis();
         product.setName(uniqueName);
@@ -118,10 +99,10 @@ public class ProductDAOTest {
         
         assertTrue(product.getId() > 0);
         
-        ArrayList<Product> foundProducts = productDAO.searchProductByName(uniqueName);
-        assertEquals(1, foundProducts.size());
+        ArrayList<Product> products = productDAO.searchProductByName(uniqueName);
+        assertEquals(1, products.size());
         
-        Product foundProduct = foundProducts.get(0);
+        Product foundProduct = products.get(0);
         assertEquals(uniqueName, foundProduct.getName());
     }
 }

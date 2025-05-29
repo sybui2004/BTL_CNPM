@@ -27,6 +27,7 @@ import com.mycompany.btl_cnpm.model.ImportedProduct;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.model.User;
 import com.mycompany.btl_cnpm.view.supplier.SupplierFrm;
+import com.mycompany.btl_cnpm.view.product.ProductFrm;
 
 public class ConfirmFrm extends JFrame implements ActionListener {
     private JPanel mainPanel, headerPanel, infoPanel, tablePanel, buttonPanel;
@@ -34,6 +35,7 @@ public class ConfirmFrm extends JFrame implements ActionListener {
     private JTable tblProducts;
     private DefaultTableModel tableModel;
     private JButton btnConfirm, btnCancel;
+    //private JButton btnBack;
     
     private Receipt receipt;
     
@@ -43,13 +45,11 @@ public class ConfirmFrm extends JFrame implements ActionListener {
     }
     
     private void initComponents() {
-        // Main Panel
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(10, 10));
         mainPanel.setBackground(new Color(240, 240, 240));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // Header Panel
         headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setBackground(new Color(240, 240, 240));
@@ -58,20 +58,17 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         headerPanel.add(lblTitle, BorderLayout.WEST);
         
-        // User Info
         lblUserInfo = new JLabel("Logged in as: " + receipt.getUser().getFullname());
         lblUserInfo.setFont(new Font("Arial", Font.PLAIN, 12));
         headerPanel.add(lblUserInfo, BorderLayout.EAST);
         
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         
-        // Info Panel
         infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(new Color(240, 240, 240));
         infoPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Receipt Information"));
         
-        // Receipt info
         JPanel gridPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         gridPanel.setBackground(new Color(240, 240, 240));
         
@@ -92,7 +89,6 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         infoPanel.add(gridPanel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
-        // Product Table 
         tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(new Color(240, 240, 240));
         tablePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Imported Products"));
@@ -153,6 +149,12 @@ public class ConfirmFrm extends JFrame implements ActionListener {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(240, 240, 240));
         
+        // btnBack = new JButton("Back");
+        // btnBack.setFont(new Font("Arial", Font.BOLD, 14));
+        // btnBack.setPreferredSize(new Dimension(100, 40));
+        // btnBack.addActionListener(this);
+        // buttonPanel.add(btnBack);
+        
         btnConfirm = new JButton("Confirm");
         btnConfirm.setFont(new Font("Arial", Font.BOLD, 14));
         btnConfirm.setPreferredSize(new Dimension(120, 40));
@@ -194,14 +196,25 @@ public class ConfirmFrm extends JFrame implements ActionListener {
                     JOptionPane.YES_NO_OPTION);
             
             if (choice == JOptionPane.YES_OPTION) {
-                backToSupplierFrm(receipt.getUser());
+                backToProductFrm(receipt);
             }
-        }
+        } 
+        // else if (e.getSource() == btnBack) {
+        //    ProductFrm productFrm = new ProductFrm(receipt);
+        //     productFrm.setVisible(true);
+        //     this.dispose();
+        // }
     }
 
     private void backToSupplierFrm(User u) {
         SupplierFrm supplierFrm = new SupplierFrm(u);
         supplierFrm.setVisible(true);
+        this.dispose();
+    }
+
+    private void backToProductFrm(Receipt receipt) {
+        ProductFrm productFrm = new ProductFrm(receipt);
+        productFrm.setVisible(true);
         this.dispose();
     }
 } 

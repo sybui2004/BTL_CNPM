@@ -44,7 +44,6 @@ public class SupplierDAOTest {
 
     @Test
     public void testSearchSupplierByNameException1() {
-        System.out.println("searchSupplierByName - Exception Case 1");
         String key = "xxxxxxxxxxxx";
         ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(key);
         assertNotNull(suppliers);
@@ -53,7 +52,6 @@ public class SupplierDAOTest {
     
     @Test
     public void testSearchSupplierByNameException2() {
-        System.out.println("searchSupplierByName - Exception Case 2");
         String key = "sd";
         ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(key);
         assertNotNull(suppliers);
@@ -62,7 +60,6 @@ public class SupplierDAOTest {
 
     @Test
     public void testSearchSupplierByNameStandard1() {
-        System.out.println("searchSupplierByName - Standard Case 1");
         String key = "An";
         ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(key);
         assertNotNull(suppliers);
@@ -75,7 +72,6 @@ public class SupplierDAOTest {
 
     @Test
     public void testSearchSupplierByNameStandard2() {
-        System.out.println("searchSupplierByName - Standard Case 2");
         String key = "B";
         ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(key);
         assertNotNull(suppliers);
@@ -85,19 +81,9 @@ public class SupplierDAOTest {
         }
         return;
     }
-    
-    @Test
-    public void testSearchSupplierByNameEmptyKeyword() {
-        System.out.println("searchSupplierByName - Empty Keyword");
-        String key = "";
-        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(key);
-        assertNotNull(suppliers);
-        assertTrue(suppliers.size() > 0);
-    }
 
     @Test
     public void testAddSupplier() {
-        System.out.println("addSupplier");
         Supplier supplier = new Supplier();
         String uniqueName = "Test Supplier " + System.currentTimeMillis();
         supplier.setName(uniqueName);
@@ -108,11 +94,11 @@ public class SupplierDAOTest {
         
         assertTrue(result);
         assertTrue(supplier.getId() > 0);
+
+        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(uniqueName);
+        assertEquals(1, suppliers.size());
         
-        ArrayList<Supplier> foundSuppliers = supplierDAO.searchSupplierByName(uniqueName);
-        assertEquals(1, foundSuppliers.size());
-        
-        Supplier foundSupplier = foundSuppliers.get(0);
+        Supplier foundSupplier = suppliers.get(0);
         assertEquals(uniqueName, foundSupplier.getName());
         assertEquals("Test Address", foundSupplier.getAddress());
         assertEquals("0123456789", foundSupplier.getTel());

@@ -20,7 +20,6 @@ public class DAO {
                 "jdbc:mysql://localhost:3306/product_management?autoReconnect=true&useSSL=false";
             String dbClass = "com.mysql.cj.jdbc.Driver";
             try {
-                
                 Class.forName(dbClass);
                 conn = DriverManager.getConnection(dbUrl, "root", "root");
             } catch (Exception e) {

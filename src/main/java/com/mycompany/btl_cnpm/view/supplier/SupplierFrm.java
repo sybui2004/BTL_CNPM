@@ -32,40 +32,40 @@ import com.mycompany.btl_cnpm.model.Supplier;
 import com.mycompany.btl_cnpm.model.User;
 import com.mycompany.btl_cnpm.model.Receipt;
 import com.mycompany.btl_cnpm.view.product.ProductFrm;
-
+//import com.mycompany.btl_cnpm.view.user.ImportHomeFrm;
 public class SupplierFrm extends JFrame implements ActionListener {
     private JTextField txtName;
     private JTextField txtAddress;
     private JTextField txtTel;
     private JButton btnSearch;
     private JButton btnAddNew;
+    //private JButton btnBack;
     private JTable tblSupplier;
     private DefaultTableModel tableModel;
     private User user;
-    
+    private SupplierDAO supplierDAO;
+    private ArrayList<Supplier> currentSupplierSearch;
     public SupplierFrm(User user) {
         this.user = user;
+        supplierDAO = new SupplierDAO();
+        currentSupplierSearch = new ArrayList<>();
         initComponents();
     }
     
     private void initComponents() {
-        // Main panel
         JPanel mainPanel = new JPanel(new BorderLayout(0, 10));
         mainPanel.setBackground(new Color(240, 240, 240));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // Header panel
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(240, 240, 240));
         
-        // Title panel 
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.setBackground(new Color(240, 240, 240));
         JLabel lblTitle = new JLabel("Search Supplier");
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         titlePanel.add(lblTitle);
         
-        // User info panel
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         userPanel.setBackground(new Color(240, 240, 240));
         JLabel lblLoggedIn = new JLabel("Logged in as: " + user.getFullname());
@@ -75,14 +75,12 @@ public class SupplierFrm extends JFrame implements ActionListener {
         headerPanel.add(titlePanel, BorderLayout.CENTER);
         headerPanel.add(userPanel, BorderLayout.EAST);
         
-        // Form panel
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(new Color(240, 240, 240));
         
         formPanel.add(Box.createVerticalStrut(40));
         
-        // Form fields
         JPanel fieldsPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         fieldsPanel.setBackground(new Color(240, 240, 240));
         
@@ -133,9 +131,12 @@ public class SupplierFrm extends JFrame implements ActionListener {
         btnSearch.setPreferredSize(new Dimension(100, 25));
         btnAddNew = new JButton("Add New");
         btnAddNew.setPreferredSize(new Dimension(100, 25));
+        // btnBack = new JButton("Back");
+        // btnBack.setPreferredSize(new Dimension(100, 25));
         
         buttonPanel.add(btnSearch);
         buttonPanel.add(btnAddNew);
+        //buttonPanel.add(btnBack);
 
         formPanel.add(buttonPanel);
         
@@ -166,10 +167,10 @@ public class SupplierFrm extends JFrame implements ActionListener {
         header.setFont(new Font("Arial", Font.BOLD, 12));
 
         TableColumnModel columnModel = tblSupplier.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(50);    // STT
-        columnModel.getColumn(1).setPreferredWidth(150);   // Name
-        columnModel.getColumn(2).setPreferredWidth(200);   // Address
-        columnModel.getColumn(3).setPreferredWidth(100);   // Tell
+        columnModel.getColumn(0).setPreferredWidth(50);  
+        columnModel.getColumn(1).setPreferredWidth(150);
+        columnModel.getColumn(2).setPreferredWidth(200);   
+        columnModel.getColumn(3).setPreferredWidth(100);  
         
         tblSupplier.addMouseListener(new MouseAdapter() {
             @Override
@@ -188,12 +189,31 @@ public class SupplierFrm extends JFrame implements ActionListener {
         
         btnSearch.addActionListener(this);
         btnAddNew.addActionListener(this);
+        //btnBack.addActionListener(this);
         
         this.setContentPane(mainPanel);
         this.setSize(650, 550);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Search Supplier");
+
+        loadAllSuppliers();
+    }
+
+    private void loadAllSuppliers() {
+        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName("");
+        currentSupplierSearch.addAll(suppliers);
+        DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+        for (Supplier supplier : suppliers) {
+            model.addRow(new Object[]{
+                stt++,
+                supplier.getName(),
+                supplier.getAddress(),
+                supplier.getTel()
+            });
+        }
     }
     
     private void navigateToProduct() {
@@ -219,31 +239,23 @@ public class SupplierFrm extends JFrame implements ActionListener {
             return null;
         }
         
-        DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
-        String name = (String) model.getValueAt(selectedRow, 1);
-        String address = (String) model.getValueAt(selectedRow, 2);
-        String tel = (String) model.getValueAt(selectedRow, 3);
-        
-        SupplierDAO supplierDAO = new SupplierDAO();
-        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(name);
-        for (Supplier s : suppliers) {
-            if (s.getName().equals(name) && s.getAddress().equals(address) && s.getTel().equals(tel)) {
-                return s;
-            }
-        }
-        
-        return null;
+        return currentSupplierSearch.get(selectedRow);
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
             String name = txtName.getText();
-            SupplierDAO supplierDAO = new SupplierDAO();
+            // if (name.isEmpty()) {
+            //     JOptionPane.showMessageDialog(this, "Please enter a name to search");
+            //     return;
+            // }
             DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
             model.setRowCount(0);
             
             ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName(name);
+            currentSupplierSearch.clear();
+            currentSupplierSearch.addAll(suppliers);
             if (suppliers.isEmpty()) {
                 JOptionPane.showMessageDialog(this, 
                     "No suppliers found matching \"" + name + "\"", 
@@ -275,7 +287,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
             supplier.setAddress(txtAddress.getText());
             supplier.setTel(txtTel.getText());
             
-            SupplierDAO supplierDAO = new SupplierDAO();
             if (supplierDAO.addSupplier(supplier)) {
                 JOptionPane.showMessageDialog(this, "Supplier added successfully");
                 
@@ -283,7 +294,6 @@ public class SupplierFrm extends JFrame implements ActionListener {
                 txtAddress.setText("");
                 txtTel.setText("");
                 
-                // Refresh supplier list
                 DefaultTableModel model = (DefaultTableModel) tblSupplier.getModel();
                 model.setRowCount(0);
                 
@@ -299,6 +309,11 @@ public class SupplierFrm extends JFrame implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to add supplier");
             }
-        }
+        } 
+        // else if (e.getSource() == btnBack) {
+        //     this.dispose();
+        //     ImportHomeFrm importHomeFrm = new ImportHomeFrm(user);
+        //     importHomeFrm.setVisible(true);
+        // }
     }
 } 

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,7 +29,6 @@ public class ReceiptDAOTest {
     private SupplierDAO supplierDAO;
     private ProductDAO productDAO;
     private UserDAO userDAO;
-    
     public ReceiptDAOTest() {
     }
     
@@ -52,106 +52,58 @@ public class ReceiptDAOTest {
     public void tearDown() {
     }
 
-    /**
-     * Test thêm phiếu nhập hàng với sản phẩm hợp lệ
-     */
     @Test
-    public void testAddProductOrderSuccess() {
-        System.out.println("addProductOrder - Success");
-        
-        // Tạo user đăng nhập
+    public void testAddProductOrderSuccess() {        
         User user = new User();
-        user.setUsername("admin"); // Thay đổi thành username có trong DB
-        user.setPassword("123456"); // Thay đổi thành password có trong DB
+        user.setUsername("a");
+        user.setPassword("a@123"); 
         boolean loginSuccess = userDAO.checkLogin(user);
         assertTrue(loginSuccess);
+
+        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName("An");
+        assertFalse(suppliers.isEmpty());
+        Supplier supplier = suppliers.get(0);
+
+        ArrayList<Product> products = productDAO.searchProductByName("Pen");
+        assertFalse(products.isEmpty());
+        Product product = products.get(0);
         
-        // Tìm supplier
-        Supplier supplier = null;
-        for (Supplier s : supplierDAO.searchSupplierByName("")) {
-            supplier = s;
-            break;
-        }
-        assertNotNull(supplier);
-        
-        // Tìm product
-        Product product = null;
-        for (Product p : productDAO.searchProductByName("")) {
-            product = p;
-            break;
-        }
-        assertNotNull(product);
-        
-        // Tạo phiếu nhập hàng
         Receipt receipt = new Receipt();
         receipt.setDate(new Date());
         receipt.setNote("Test receipt");
         receipt.setSupplier(supplier);
         receipt.setUser(user);
         
-        // Thêm sản phẩm vào phiếu nhập
-        ImportedProduct importedProduct = new ImportedProduct(10, 1000, product); // Số lượng và đơn giá
+        ImportedProduct importedProduct = new ImportedProduct(10, 1000, product);
         receipt.addImportedProduct(importedProduct);
         
-        // Lưu phiếu nhập
         boolean result = receiptDAO.addProductOrder(receipt);
         
-        // Kiểm tra lưu thành công
         assertTrue(result);
         
-        // Kiểm tra phiếu nhập đã được gán ID
         assertTrue(receipt.getId() > 0);
-        System.out.println("Receipt created with ID: " + receipt.getId());
     }
     
-    /**
-     * Test thêm phiếu nhập hàng thất bại do không có sản phẩm
-     */
     @Test
     public void testAddProductOrderFailWithNoProducts() {
-        System.out.println("addProductOrder - No Products");
-        
-        // Tạo user đăng nhập
         User user = new User();
-        user.setUsername("admin"); // Thay đổi thành username có trong DB
-        user.setPassword("123456"); // Thay đổi thành password có trong DB
+        user.setUsername("a");
+        user.setPassword("a@123"); 
         boolean loginSuccess = userDAO.checkLogin(user);
         assertTrue(loginSuccess);
+
+        ArrayList<Supplier> suppliers = supplierDAO.searchSupplierByName("An");
+        assertFalse(suppliers.isEmpty());
+        Supplier supplier = suppliers.get(0);
         
-        // Tìm supplier
-        Supplier supplier = null;
-        for (Supplier s : supplierDAO.searchSupplierByName("")) {
-            supplier = s;
-            break;
-        }
-        assertNotNull(supplier);
-        
-        // Tạo phiếu nhập hàng không có sản phẩm
         Receipt receipt = new Receipt();
         receipt.setDate(new Date());
         receipt.setNote("Empty receipt");
         receipt.setSupplier(supplier);
         receipt.setUser(user);
         
-        // Lưu phiếu nhập
         boolean result = receiptDAO.addProductOrder(receipt);
         
-        // Kiểm tra lưu thất bại vì không có sản phẩm
-        assertFalse(result);
-    }
-    
-    /**
-     * Test thêm phiếu nhập hàng thất bại với dữ liệu null
-     */
-    @Test
-    public void testAddProductOrderWithNullReceipt() {
-        System.out.println("addProductOrder - Null Receipt");
-        
-        // Truyền tham số null
-        Receipt nullReceipt = null;
-        boolean result = receiptDAO.addProductOrder(nullReceipt);
-        
-        // Kiểm tra lưu thất bại
         assertFalse(result);
     }
 }

@@ -28,12 +28,10 @@ public class ImportHomeFrm extends JFrame implements ActionListener {
     }
     
     private void initComponents() {
-        // Main panel
         JPanel pnMain = new JPanel(new BorderLayout());
         pnMain.setBackground(new Color(240, 240, 240));
         pnMain.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // User info panel
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         userPanel.setBackground(new Color(240, 240, 240));
         JLabel lblLoggedIn = new JLabel("Logged in as: " + user.getFullname());
@@ -42,14 +40,12 @@ public class ImportHomeFrm extends JFrame implements ActionListener {
         
         pnMain.add(userPanel, BorderLayout.NORTH);
         
-        // Center panel 
         JPanel pnCenter = new JPanel();
         pnCenter.setLayout(new BoxLayout(pnCenter, BoxLayout.Y_AXIS));
         pnCenter.setBackground(new Color(240, 240, 240));
 
         pnCenter.add(Box.createVerticalStrut(100));
         
-        // Welcome label panel
         JPanel pnWelcome = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnWelcome.setBackground(new Color(240, 240, 240));
         JLabel lblWelcome = new JLabel("Welcome " + user.getFullname() + " (" + user.getRole() + ")");
